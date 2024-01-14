@@ -20,9 +20,14 @@ impl Handler<Print> for Printer {
 #[tokio::main]
 async fn main() {
     let addr = xtra::spawn_tokio(Printer::default(), Mailbox::unbounded());
+
+    let addr2 = addr.clone();
+    
     loop {
         addr.send(Print("hello".to_string()))
             .await
             .expect("Printer should not be dropped");
+
+        addr2.send(Print("hello2".to_string())).await.unwrap();        
     }
 }
